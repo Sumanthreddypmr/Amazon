@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: external-dns
+  labels:
+    app: external-dns
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: external-dns
+  template:
+    metadata:
+      labels:
+        app: external-dns
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      containers:
+        - name: external-dns
+          image: {{ printf "%s:%s" .Values.image.repository .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - --source=service
+            - --source=ingress
+            - --provider={{ .Values.provider }}
+            - --registry={{ .Values.registry }}
+            - --policy={{ .Values.policy }}
+            - --txt-owner-id={{ .Values.txtOwnerId }}
+            - --aws-region={{ .Values.aws.region }}
+{{- if .Values.domainFilters }}
+            {{- range .Values.domainFilters }}
+            - --domain-filter={{ . }}
+            {{- end }}
+{{- end }}
+{{- if .Values.annotationFilter }}
+            - --annotation-filter={{ .Values.annotationFilter }}
+{{- end }}
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi

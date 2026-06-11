@@ -1,0 +1,19 @@
+installCRDs: true
+
+# cert-manager configuration
+certManager:
+  clusterResourceNamespace: cert-manager
+  installCRDs: true
+
+# ClusterIssuer options, used to create a Let's Encrypt issuer via DNS.
+clusterIssuer:
+  enabled: true
+  name: letsencrypt-issuer
+  email: admin@payment-service.com
+  environment: staging # staging or production
+  dnsProvider: route53
+  region: us-east-1
+  hostedZoneID: ""
+  dnsSecretName: route53-credentials
+  dnsSecretNamespace: cert-manager
+  # Add Route53 access keys or other DNS provider secrets to this secret in the cert-manager namespace.

@@ -1,0 +1,6 @@
+apiVersion: v2
+name: alb-controller
+description: "AWS Load Balancer Controller service account for IRSA"
+type: application
+version: 0.1.0
+appVersion: "2.5.1"

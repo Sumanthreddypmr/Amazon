@@ -1,0 +1,34 @@
+{{- if .Values.payment.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: payment-ingress
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    {{- if .Values.payment.ingress.tls.enabled }}
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    {{- if .Values.payment.ingress.tls.certificateArn }}
+    alb.ingress.kubernetes.io/certificate-arn: {{ .Values.payment.ingress.tls.certificateArn | quote }}
+    {{- end }}
+    {{- if .Values.payment.ingress.tls.redirectHttp }}
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    {{- end }}
+    {{- else }}
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    {{- end }}
+spec:
+  ingressClassName: alb
+  rules:
+    - host: {{ .Values.payment.ingress.host | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: payment
+                port:
+                  number: {{ $.Values.services | index 3 | default (dict "port" 8000) | get "port" }}
+{{- end }}

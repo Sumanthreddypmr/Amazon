@@ -1,0 +1,63 @@
+replicaCount: 2
+imagePullPolicy: IfNotPresent
+services:
+  - name: iphone
+    port: 8000
+    image:
+      repository: amazon-iphone
+      tag: latest
+    replicaCount: 2
+  - name: laptop
+    port: 8000
+    image:
+      repository: amazon-laptop
+      tag: latest
+    replicaCount: 2
+  - name: cart
+    port: 8000
+    image:
+      repository: amazon-cart
+      tag: latest
+    replicaCount: 2
+  - name: payment
+    port: 8000
+    image:
+      repository: amazon-payment
+      tag: latest
+    replicaCount: 2
+  - name: delivery
+    port: 8000
+    image:
+      repository: amazon-delivery
+      tag: latest
+    replicaCount: 2
+
+resources:
+  limits:
+    cpu: 250m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
+
+service:
+  type: ClusterIP
+  annotations: {}
+
+payment:
+  ingress:
+    enabled: true
+    # Hostname to use for ALB host-based routing
+    host: payment-service.com
+    tls:
+      enabled: false
+      # Provide your ACM certificate ARN here to enable HTTPS termination on ALB.
+      certificateArn: ""
+      # Redirect HTTP to HTTPS when TLS is enabled
+      redirectHttp: true

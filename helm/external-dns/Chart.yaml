@@ -1,0 +1,6 @@
+apiVersion: v2
+name: external-dns
+description: "Deploy external-dns and its service account for AWS Route53 updates"
+type: application
+version: 0.1.0
+appVersion: "0.13.3"

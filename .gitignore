@@ -1,0 +1,36 @@
+__pycache__/
+*.py[cod]
+*.pyo
+*.env
+.venv/
+venv/
+.env
+.DS_Store
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+*.tfstate
+*.tfstate.backup
+*.log
+*.swp
+*.idea/
+.vscode/
+*.pyc
+*.pyd
+*.pyo
+*.pdb
+build/
+dist/
+*.egg-info/
+*.egg
+.terraform.lock.hcl
+
+# Docker
+docker-compose.override.yml
+*.tar
+
+# Kubernetes
+*.kubeconfig
+
+# Mac
+Thumbs.db

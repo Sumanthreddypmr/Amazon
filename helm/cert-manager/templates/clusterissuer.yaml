@@ -1,0 +1,24 @@
+{{- if .Values.clusterIssuer.enabled }}
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: {{ .Values.clusterIssuer.name }}
+spec:
+  acme:
+    email: {{ .Values.clusterIssuer.email | quote }}
+    server: {{ if eq .Values.clusterIssuer.environment "production" }}https://acme-v02.api.letsencrypt.org/directory{{ else }}https://acme-staging-v02.api.letsencrypt.org/directory{{ end }}
+    privateKeySecretRef:
+      name: {{ .Values.clusterIssuer.name }}-private-key
+    solvers:
+      - dns01:
+          {{- if eq .Values.clusterIssuer.dnsProvider "route53" }}
+          route53:
+            region: {{ .Values.clusterIssuer.region | quote }}
+            hostedZoneID: {{ .Values.clusterIssuer.hostedZoneID | quote }}
+            secretAccessKeySecretRef:
+              name: {{ .Values.clusterIssuer.dnsSecretName }}
+              key: secret-access-key
+          {{- else }}
+          {{/* Add other DNS provider blocks here if needed */}}
+          {{- end }}
+{{- end }}

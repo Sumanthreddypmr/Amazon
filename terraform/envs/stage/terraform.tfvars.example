@@ -1,0 +1,13 @@
+environment = "stage"
+region = "us-east-1"
+cluster_name = "amazon-stage-eks"
+vpc_cidr = "10.20.0.0/16"
+public_subnets = ["10.20.1.0/24", "10.20.2.0/24"]
+private_subnets = ["10.20.11.0/24", "10.20.12.0/24"]
+node_desired_capacity = 2
+node_min_size = 1
+node_max_size = 4
+tags = {
+  Project     = "Amazon"
+  Environment = "stage"
+}

@@ -1,0 +1,25 @@
+serviceAccount:
+  create: true
+  name: external-dns
+  annotations: {}
+  labels: {}
+  roleArn: ""
+
+replicaCount: 1
+image:
+  repository: k8s.gcr.io/external-dns/external-dns
+  tag: v0.13.3
+  pullPolicy: IfNotPresent
+
+provider: aws
+policy: sync
+registry: txt
+txtOwnerId: amazon-external-dns
+domainFilters:
+  - payment-service.com
+sources:
+  - service
+  - ingress
+aws:
+  region: us-east-1
+annotationFilter: ""

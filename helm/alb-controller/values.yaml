@@ -1,0 +1,8 @@
+serviceAccount:
+  create: true
+  name: aws-load-balancer-controller
+  annotations: {}
+  labels: {}
+
+# Set this to the IAM role ARN created by Terraform for IRSA.
+roleArn: ""
