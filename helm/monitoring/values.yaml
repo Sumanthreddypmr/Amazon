@@ -1,26 +1,17 @@
-prometheus:
-  prometheusSpec:
-    retention: 15d
-    serviceMonitorSelectorNilUsesHelmValues: false
-    ruleSelectorNilUsesHelmValues: false
+global:
+  licenseKey: "REPLACE_WITH_YOUR_NEW_RELIC_LICENSE_KEY"
+  cluster: "amazon-dev-eks"
+  lowDataMode: false
 
-alertmanager:
+newrelic-infrastructure:
   enabled: true
+  privileged: true
+
+kube-state-metrics:
+  enabled: true
+
+prometheus:
+  enabled: false
 
 grafana:
-  enabled: true
-  adminUser: admin
-  adminPassword: admin123
-  service:
-    type: ClusterIP
-  ingress:
-    enabled: false
-
-kubeStateMetrics:
-  enabled: true
-
-nodeExporter:
-  enabled: true
-
-prometheusOperator:
-  enabled: true
+  enabled: false

@@ -19,12 +19,12 @@ tf-apply:
 	terraform -chdir=terraform/envs/dev apply
 
 helm-install:
-	helm repo add prometheus-community https://prometheus-community.github.io/helm-charts || true
+	helm repo add newrelic https://helm-charts.newrelic.com || true
 	helm repo add eks https://aws.github.io/eks-charts || true
 	helm repo add jetstack https://charts.jetstack.io || true
 	helm repo update
 	helm upgrade --install amazon-apps ./helm/amazon --namespace amazon-app --create-namespace -f helm/amazon/values.yaml
-	helm upgrade --install amazon-monitoring prometheus-community/kube-prometheus-stack --namespace amazon-monitoring --create-namespace -f helm/monitoring/values.yaml
+	helm upgrade --install amazon-monitoring newrelic/nri-bundle --namespace amazon-monitoring --create-namespace -f helm/monitoring/values.yaml
 
 helm-install-cert-manager:
 	helm repo add jetstack https://charts.jetstack.io || true

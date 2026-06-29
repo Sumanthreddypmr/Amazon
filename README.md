@@ -20,7 +20,7 @@ This repository contains a full Python-based microservices scaffold for the Amaz
   - `terraform/envs/stage`
   - `terraform/envs/prod`
 - Helm chart for application deployment: `helm/amazon`
-- Helm values for monitoring via Prometheus and Grafana: `helm/monitoring`
+- Helm values for New Relic monitoring: `helm/monitoring`
 - Root `Makefile` for common build and deploy commands
 
 ## Architecture
@@ -36,15 +36,14 @@ flowchart TD
     E[Delivery Service]
   end
   EKSCluster --> AppPods
-  AppPods -->|Metrics| Prometheus["Prometheus"]
-  Prometheus --> Grafana["Grafana"]
+  AppPods -->|Metrics| NewRelic["New Relic"]
 ```
 
 ## Directory structure
 
 - `services/` — microservice source code, requirements, and Dockerfiles
 - `helm/amazon/` — Helm chart to deploy all 5 microservices inside EKS
-- `helm/monitoring/` — Prometheus + Grafana deployment values
+- `helm/monitoring/` — New Relic deployment values
 - `terraform/modules/` — reusable Terraform modules for VPC, IAM, and EKS
 - `terraform/envs/` — environment-specific infrastructure entry points
 
@@ -59,10 +58,10 @@ docker build -t amazon-iphone:latest .
 
 ## Helm deployment
 
-Install Helm if not already installed, then add the Prometheus Helm repo:
+Install Helm if not already installed, then add the New Relic Helm repo:
 
 ```bash
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add newrelic https://helm-charts.newrelic.com
 helm repo update
 ```
 
@@ -72,10 +71,10 @@ Deploy the application chart to EKS:
 helm upgrade --install amazon-apps ./helm/amazon --namespace amazon-app --create-namespace -f helm/amazon/values.yaml
 ```
 
-Deploy Prometheus and Grafana for monitoring:
+Deploy New Relic for monitoring:
 
 ```bash
-helm upgrade --install amazon-monitoring prometheus-community/kube-prometheus-stack --namespace amazon-monitoring --create-namespace -f helm/monitoring/values.yaml
+helm upgrade --install amazon-monitoring newrelic/nri-bundle --namespace amazon-monitoring --create-namespace -f helm/monitoring/values.yaml
 ```
 
 ## Terraform environments
@@ -101,17 +100,15 @@ terraform apply -var-file=terraform.tfvars
 - `terraform/modules/iam` creates EKS cluster and node group IAM roles with the correct AWS managed policies.
 - `terraform/modules/eks` creates the EKS cluster and managed node group.
 
-## Prometheus and Grafana
+## New Relic monitoring
 
-The monitoring setup uses Prometheus Operator and Grafana. The `helm/monitoring/values.yaml` file enables:
+The monitoring setup now uses New Relic for Kubernetes and infrastructure observability. The `helm/monitoring/values.yaml` file enables:
 
-- Prometheus server retention
-- Alertmanager
-- Grafana
-- kube-state-metrics
-- node-exporter
+- New Relic infrastructure monitoring
+- Kubernetes cluster visibility
+- kube-state-metrics integration
 
-Grafana credentials are configured in the values file and should be updated before production deployment.
+Replace the placeholder license key in the values file before deploying to a real environment.
 
 ## Notes and next steps
 
@@ -135,7 +132,7 @@ make helm-install
 - ECR login and image push steps (security credentials should be provided later)
 - Real database persistence for services (the services are currently in-memory stubs)
 - Ingress / load balancer manifests (these can be added once you choose an ingress controller)
-- Production-grade secrets management for Grafana and service configuration
+- Production-grade secrets management for New Relic credentials and service configuration
 
 ## ALB Ingress (AWS Load Balancer Controller)
 
